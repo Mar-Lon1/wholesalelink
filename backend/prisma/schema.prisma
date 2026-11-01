@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  RETAILER
+  WHOLESALER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  UNPAID
+  MANUAL_PENDING
+  PAID
+}
+
+enum DeliveryMethod {
+  PICKUP
+  DELIVERY
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile  Profile?
+  orders   Order[]
+  products Product[]
+}
+
+model Profile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName String
+  supplierType String?
+  contactName  String
+  phone        String
+  location     String
+  description  String?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Product {
+  id                   String   @id @default(cuid())
+  wholesalerId         String
+  wholesaler           User     @relation(fields: [wholesalerId], references: [id], onDelete: Cascade)
+  name                 String
+  category             String
+  description          String?
+  unit                 String
+  price                Decimal  @db.Decimal(10, 2)
+  minimumOrderQuantity Int      @default(1)
+  availableQuantity    Int
+  active               Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  orderItems OrderItem[]
+
+  @@index([category])
+  @@index([wholesalerId])
+  @@index([name])
+}
+
+model Order {
+  id             String         @id @default(cuid())
+  reference      String         @unique
+  retailerId     String
+  retailer       User           @relation(fields: [retailerId], references: [id], onDelete: Restrict)
+  wholesalerId   String
+  status         OrderStatus    @default(PENDING)
+  paymentStatus  PaymentStatus  @default(UNPAID)
+  deliveryMethod DeliveryMethod @default(PICKUP)
+  deliveryAddress String?
+  notes          String?
+  subtotal       Decimal        @db.Decimal(10, 2)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  items OrderItem[]
+
+  @@index([retailerId])
+  @@index([wholesalerId])
+  @@index([status])
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId    String
+  product      Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+  // Snapshot fields — preserved if product changes
+  productName  String
+  productUnit  String
+  priceAtOrder Decimal @db.Decimal(10, 2)
+  quantity     Int
+
+  @@index([orderId])
+}
