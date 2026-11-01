@@ -19,6 +19,49 @@ const FARM_CATEGORIES = [
   { name: 'Local Grains & Legumes', desc: 'Ghana brown/white rice, white cowpeas & dried yellow maize', icon: Package },
 ];
 
+function HeroImageCard() {
+  return (
+    <div className="relative group rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/20 bg-slate-900/50">
+      {/* Main Image with aspect ratio and smooth hover zoom */}
+      <img
+        src={heroMarketImg}
+        alt="Ghanaian wholesale fresh farm produce and market harvests"
+        className="w-full h-[360px] sm:h-[420px] lg:h-[460px] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+        loading="eager"
+      />
+
+      {/* Directional Vignette Overlay for Readability */}
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
+
+      {/* Floating Top Badge */}
+      <div className="absolute top-4 right-4 z-10">
+        <span className="badge bg-slate-900/80 backdrop-blur-md text-amber-300 border border-white/20 px-3 py-1.5 text-xs font-semibold shadow-md">
+          🌾 Fresh From Farm & Market Hubs
+        </span>
+      </div>
+
+      {/* Floating Bottom Card */}
+      <div className="absolute bottom-4 left-4 right-4 z-10 backdrop-blur-md bg-slate-900/85 border border-white/15 rounded-2xl p-3.5 sm:p-4 text-white shadow-xl">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
+              Direct Food Vendor Supply
+            </span>
+          </div>
+          <span className="text-[11px] text-white/60">Ghana Agriculture</span>
+        </div>
+        <p className="font-semibold text-sm sm:text-base text-white mt-1">
+          Vegetables, Tubers, Poultry, Meat, Eggs & Milk
+        </p>
+        <p className="text-xs text-white/70 mt-0.5">
+          Direct harvest & farm-gate pricing for chop bars, restaurants & caterers
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
   const { user } = useAuth();
 
@@ -40,6 +83,11 @@ export default function HomePage() {
             <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed">
               Direct sourcing for Ghanaian chop bars, restaurants, street food kitchens, and caterers. Order farm-fresh vegetables, tubers, plantains, grains, tropical fruits, poultry, butchery cuts, eggs, and farm milk directly from local producers.
             </p>
+
+            {/* Hero Image for Mobile & Tablet (displayed above buttons) */}
+            <div className="w-full lg:hidden">
+              <HeroImageCard />
+            </div>
 
             {/* CTAs */}
             <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
@@ -79,46 +127,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Right Column: Hero Image Showcase */}
-          <div className="lg:col-span-5 relative w-full">
-            <div className="relative group rounded-3xl overflow-hidden shadow-2xl shadow-black/60 border border-white/20 bg-slate-900/50">
-              {/* Main Image with aspect ratio and smooth hover zoom */}
-              <img
-                src={heroMarketImg}
-                alt="Ghanaian wholesale fresh farm produce and market harvests"
-                className="w-full h-[360px] sm:h-[420px] lg:h-[460px] object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                loading="eager"
-              />
-
-              {/* Directional Vignette Overlay for Readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
-
-              {/* Floating Top Badge */}
-              <div className="absolute top-4 right-4 z-10">
-                <span className="badge bg-slate-900/80 backdrop-blur-md text-amber-300 border border-white/20 px-3 py-1.5 text-xs font-semibold shadow-md">
-                  🌾 Fresh From Farm & Market Hubs
-                </span>
-              </div>
-
-              {/* Floating Bottom Card */}
-              <div className="absolute bottom-4 left-4 right-4 z-10 backdrop-blur-md bg-slate-900/85 border border-white/15 rounded-2xl p-3.5 sm:p-4 text-white shadow-xl">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">
-                      Direct Food Vendor Supply
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-white/60">Ghana Agriculture</span>
-                </div>
-                <p className="font-semibold text-sm sm:text-base text-white mt-1">
-                  Vegetables, Tubers, Poultry, Meat, Eggs & Milk
-                </p>
-                <p className="text-xs text-white/70 mt-0.5">
-                  Direct harvest & farm-gate pricing for chop bars, restaurants & caterers
-                </p>
-              </div>
-            </div>
+          {/* Right Column: Hero Image Showcase for Desktop */}
+          <div className="hidden lg:block lg:col-span-5 relative w-full">
+            <HeroImageCard />
           </div>
         </div>
       </section>
