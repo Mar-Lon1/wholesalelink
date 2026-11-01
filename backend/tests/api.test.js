@@ -8,6 +8,22 @@ const app = require('../src/app');
 
 describe('WholesaleLink API & Core Logic Tests', () => {
   describe('Health Endpoint', () => {
+    test('GET / returns 200 and API metadata', async () => {
+      const server = app.listen(0);
+      const port = server.address().port;
+
+      try {
+        const res = await fetch(`http://localhost:${port}/`);
+        const json = await res.json();
+        assert.equal(res.status, 200);
+        assert.equal(json.success, true);
+        assert.equal(json.status, 'online');
+        assert.equal(json.name, 'WholesaleLink API');
+      } finally {
+        server.close();
+      }
+    });
+
     test('GET /health returns 200 and ok status', async () => {
       // Create a mock request / response for app
       const server = app.listen(0);

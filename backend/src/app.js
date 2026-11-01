@@ -50,6 +50,25 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// Root info endpoint (unauthenticated)
+app.get('/', (_req, res) => {
+  res.json({
+    success: true,
+    name: 'WholesaleLink API',
+    message: 'Ghana B2B Fresh Farm Produce Marketplace API is live',
+    status: 'online',
+    version: '1.0.0',
+    endpoints: {
+      health: '/health',
+      auth: '/api/v1/auth',
+      users: '/api/v1/users',
+      suppliers: '/api/v1/suppliers',
+      products: '/api/v1/products',
+      orders: '/api/v1/orders',
+    },
+  });
+});
+
 // Health check (unauthenticated)
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString(), service: 'wholesalelink-api' });
