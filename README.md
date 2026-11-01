@@ -193,27 +193,82 @@ The order lifecycle follows strict server-side state transition rules:
 
 ---
 
-## 7. Deployment Instructions
+## 7. Live Server Deployment Guide (Render + Vercel)
 
-Frontend and backend are built to be hosted on independent platforms (e.g. Render, Railway, Fly.io for backend; Vercel, Netlify, Cloudflare Pages for frontend).
+The backend is configured for **Render** (as a Node.js Web Service) and the frontend is configured for **Vercel** (as a Vite SPA).
 
-### Backend Deployment (e.g., Render / Railway)
-1. Set the root directory to `backend/`.
-2. Build command: `npm install && npx prisma generate`
-3. Start command: `node src/server.js`
-4. Set environment variables:
-   - `DATABASE_URL`: Hosted PostgreSQL connection string (with SSL mode)
-   - `JWT_SECRET`: 64-character random string
-   - `COOKIE_SECRET`: 64-character random string
-   - `NODE_ENV`: `production`
-   - `FRONTEND_URL`: `https://your-frontend-domain.com`
-   - `PORT`: Automatically assigned or `5000`
+### Step 1: Push Repository to GitHub
 
-### Frontend Deployment (e.g., Vercel / Netlify / Cloudflare Pages)
-1. Set the root directory to `frontend/`.
-2. Build command: `npm run build`
-3. Output directory: `dist`
-4. Set environment variables:
-   - `VITE_API_BASE_URL`: `https://your-backend-domain.com`
-5. Configure SPA fallback rule:
-   - Ensure all routes rewrite to `index.html` (e.g., in `vercel.json` or `_redirects` for Netlify).
+1. If you haven't already created a GitHub repository, create a new repository on [github.com](https://github.com) named `wholesalelink`.
+2. Connect your local repository and push:
+```bash
+git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/wholesalelink.git
+git branch -M main
+git push -u origin main
+```
+
+---
+
+### Step 2: Deploy Backend to Render
+
+1. Sign in to your [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** → **Web Service**.
+3. Connect your GitHub repository (`wholesalelink`).
+4. Configure the Web Service settings:
+   - **Name:** `wholesalelink-backend`
+   - **Region:** Frankfurt (EU Central) or closest to your database
+   - **Branch:** `main`
+   - **Root Directory:** `backend` *(CRITICAL: ensure this is set to `backend`)*
+   - **Runtime:** `Node`
+   - **Build Command:** `npm install && npx prisma generate`
+   - **Start Command:** `npm start` (or `node src/server.js`)
+   - **Instance Type:** `Free`
+5. In the **Environment Variables** section, add:
+
+| Key | Example Value | Description |
+| :--- | :--- | :--- |
+| `NODE_ENV` | `production` | Enables production security & cookies |
+| `PORT` | `10000` | (Render automatically sets this) |
+| `DATABASE_URL` | `postgresql://postgres.[REF]:[PASS]@aws-0-eu-west-1.pooler.supabase.com:5432/postgres` | Your Supabase connection string |
+| `JWT_SECRET` | `wholesale-link-jwt-prod-secret-2026-secure-key` | Random 32+ character secret |
+| `COOKIE_SECRET` | `wholesale-link-cookie-prod-secret-2026-secure-key` | Random 32+ character secret |
+| `JWT_EXPIRES_IN` | `7d` | Token expiry duration |
+| `FRONTEND_URL` | `https://wholesalelink.vercel.app` | (Update after deploying frontend on Vercel) |
+
+6. Click **Create Web Service**. Render will install dependencies, generate the Prisma client, and start the API.
+7. Once deployed, copy your Render URL: e.g. `https://wholesalelink-backend.onrender.com`.
+8. Test health in your browser: `https://wholesalelink-backend.onrender.com/health` should return:
+```json
+{"status":"ok","timestamp":"...","service":"wholesalelink-api"}
+```
+
+---
+
+### Step 3: Deploy Frontend to Vercel
+
+1. Sign in to your [Vercel Dashboard](https://vercel.com).
+2. Click **Add New...** → **Project**.
+3. Import your `wholesalelink` GitHub repository.
+4. Configure the Project settings:
+   - **Framework Preset:** `Vite`
+   - **Root Directory:** Click **Edit** and select `frontend` *(CRITICAL: must be `frontend`)*
+   - **Build Command:** `npm run build` (default)
+   - **Output Directory:** `dist` (default)
+5. Under **Environment Variables**, add:
+
+| Key | Value |
+| :--- | :--- |
+| `VITE_API_BASE_URL` | `https://wholesalelink-backend.onrender.com` *(Your Render backend URL from Step 2)* |
+
+6. Click **Deploy**. Vercel will build the frontend and provide your production URL (e.g. `https://wholesalelink.vercel.app`).
+7. Single-page routing is already pre-configured via `frontend/vercel.json` (`rewrites` to `/index.html`).
+
+---
+
+### Step 4: Final Linkage (Sync CORS)
+
+1. Return to your Render Web Service dashboard → **Environment**.
+2. Update `FRONTEND_URL` with your exact live Vercel domain (e.g. `https://wholesalelink.vercel.app`).
+*(Note: WholesaleLink's backend CORS also automatically permits `*.vercel.app` domains out of the box).*
+3. Open your Vercel URL in your browser and log in with any demo account (e.g. `buka@demo.wl` / `password123`)!
+
