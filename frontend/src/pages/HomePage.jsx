@@ -123,44 +123,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Demo Credentials Quick-Card */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        <div className="card p-6 bg-amber-50/70 border border-amber-200">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h2 className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-                <Store className="w-4 h-4 text-amber-700" /> Demo Accounts for Testing
-              </h2>
-              <p className="text-xs text-slate-600 mt-0.5">
-                Experience the workflow from both the food vendor buyer and farmer/wholesaler seller perspectives:
-              </p>
-            </div>
-            {!user && (
-              <Link to="/login" className="btn-primary btn-sm shrink-0">
-                Sign In Now
-              </Link>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 text-xs font-mono">
-            <div className="bg-white p-3 rounded-lg border border-amber-200 flex flex-col gap-1">
-              <span className="font-bold text-slate-800 font-sans">Food Vendor: Ama&apos;s Chop Bar</span>
-              <span className="text-slate-600">Email: <span className="text-slate-900 font-bold">retailer1@demo.wl</span></span>
-              <span className="text-slate-600">Password: <span className="text-slate-900 font-bold">Password123!</span></span>
-            </div>
-            <div className="bg-white p-3 rounded-lg border border-amber-200 flex flex-col gap-1">
-              <span className="font-bold text-slate-800 font-sans">Produce: Accra Fresh Produce Hub</span>
-              <span className="text-slate-600">Email: <span className="text-slate-900 font-bold">accrafreshproduce@demo.wl</span></span>
-              <span className="text-slate-600">Password: <span className="text-slate-900 font-bold">Password123!</span></span>
-            </div>
-            <div className="bg-white p-3 rounded-lg border border-amber-200 flex flex-col gap-1">
-              <span className="font-bold text-slate-800 font-sans">Poultry & Dairy: Kpone Livestock Hub</span>
-              <span className="text-slate-600">Email: <span className="text-slate-900 font-bold">kponelivestock@demo.wl</span></span>
-              <span className="text-slate-600">Password: <span className="text-slate-900 font-bold">Password123!</span></span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Sourcing Workflow Steps */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

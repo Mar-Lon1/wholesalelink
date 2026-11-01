@@ -72,12 +72,6 @@ export default function LoginPage() {
             <button id="login-submit" type="submit" className="btn-primary w-full btn-lg mt-1" disabled={loading}>
               {loading ? <Spinner size="sm" /> : 'Sign In'}
             </button>
-
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-800">
-              <strong>Demo credentials:</strong><br />
-              Food Vendor (Chop Bar): <span className="font-semibold text-slate-900">retailer1@demo.wl</span> / <span className="font-semibold text-slate-900">Password123!</span><br />
-              Farmer (Produce Hub): <span className="font-semibold text-slate-900">accrafreshproduce@demo.wl</span> / <span className="font-semibold text-slate-900">Password123!</span>
-            </div>
           </form>
         </div>
 
